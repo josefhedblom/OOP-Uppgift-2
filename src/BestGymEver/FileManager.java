@@ -1,8 +1,10 @@
 package BestGymEver;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FileManager {
     private String fileNamePath;
@@ -24,7 +26,7 @@ public class FileManager {
                 String name = attributes[1];
 
                 String paymentDate = fileReader.readLine();
-                String lastPaymentDate = paymentDate;
+                LocalDate lastPaymentDate = LocalDate.parse(paymentDate);
 
 
                 Customer customer = new Customer(name, personalNumber, lastPaymentDate);
@@ -37,13 +39,8 @@ public class FileManager {
         return customers;
     }
 
-    public void saveToDataBase(List<Customer> customers) {
-        try(BufferedWriter fileWriter = new BufferedWriter(new FileWriter(this.fileLogPath))){
-            for(Customer customer : customers){
-                fileWriter.write(String.join("\n", customer.toString()));
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+    public void customerTraningLog() {
+        LocalDate date = LocalDate.now();
+        System.out.println("Today: " + date);
     }
 }
