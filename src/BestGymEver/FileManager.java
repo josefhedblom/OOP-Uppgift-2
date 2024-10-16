@@ -13,7 +13,7 @@ public class FileManager {
         this.fileLogPath = fileLogPath;
     }
 
-    public void readCustomerFile() {
+    public List<Customer> readCustomerFile() {
         List<Customer> customers = new ArrayList<>();
         try(BufferedReader fileReader = new BufferedReader(new FileReader(this.fileNamePath))){
             String line;
@@ -34,7 +34,7 @@ public class FileManager {
         }catch (IOException e){
             e.printStackTrace();
         }
-        saveToDataBase(customers);
+        return customers;
     }
 
     public void saveToDataBase(List<Customer> customers) {

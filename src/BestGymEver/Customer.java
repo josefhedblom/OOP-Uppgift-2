@@ -22,13 +22,4 @@ public class Customer {
     public String getLastPaymentDate() {
         return this.lastPaymentDate;
     }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "name='" + name + '\'' +
-                ", personalNumber='" + personalNumber + '\'' +
-                ", lastPaymentDate='" + lastPaymentDate + '\'' +
-                '}' + "\n";
-    }
 }
