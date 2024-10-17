@@ -1,8 +1,5 @@
 package BestGymEver;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.time.LocalDate;
 
 public class CustomerService {
@@ -20,17 +17,16 @@ public class CustomerService {
         return null;
     }
 
-    public void checkMembership(Customer customer) {// Assign date to check
-        LocalDate today = LocalDate.now();
-
-        if (customer.getLastPaymentDate().isBefore(today.minusYears(1))) {
-            System.out.println("Paydate is older than 1 year");
-        } else {
-            System.out.println("Paydate is less than 1 year");
-        }
+    public boolean checkMembership(Customer customer, LocalDate date) {
+        return customer.getLastPaymentDate().isAfter(date.minusDays(1)) ||
+                customer.getLastPaymentDate().isEqual(date.minusDays(1));
     }
 
     public void registerTraining(Customer customer) {
-        fileManager.customerTraningLog();
+        fileManager.customerWriteToTraningLog(customer);
+    }
+
+    public void readRegisterTrainingLog(Customer customer) {
+        fileManager.customerWriteToTraningLog(customer);
     }
 }

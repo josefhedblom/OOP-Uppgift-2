@@ -38,8 +38,25 @@ public class FileManager {
         return customers;
     }
 
-    public void customerTraningLog() {
-        LocalDate date = LocalDate.now();
-        System.out.println("Today: " + date);
+    public void readCustomerTraningLogFile() {
+        try(BufferedReader fileReader = new BufferedReader(new FileReader(this.fileLogPath))){
+            String line;
+            while((line = fileReader.readLine()) != null){
+                System.out.println(line);
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void customerWriteToTraningLog(Customer customer) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileLogPath, true))){
+            String line = customer.getPersonalNumber() + ", " + customer.getName() + ", " + LocalDate.now();
+            writer.write(line);
+            writer.newLine();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
