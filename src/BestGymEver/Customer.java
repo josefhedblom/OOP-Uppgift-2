@@ -1,11 +1,13 @@
 package BestGymEver;
 
+import java.time.LocalDate;
+
 public class Customer {
     private String name;
     private String personalNumber;
-    private String lastPaymentDate;
+    private LocalDate lastPaymentDate;
 
-    public Customer(String name, String personalNumber, String lastPaymentDate) {
+    public Customer(String name, String personalNumber, LocalDate lastPaymentDate) {
         this.name = name;
         this.personalNumber = personalNumber;
         this.lastPaymentDate = lastPaymentDate;
@@ -19,7 +21,7 @@ public class Customer {
         return this.personalNumber;
     }
 
-    public String getLastPaymentDate() {
+    public LocalDate getLastPaymentDate() {
         return this.lastPaymentDate;
     }
 }

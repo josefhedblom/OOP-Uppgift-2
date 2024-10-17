@@ -6,6 +6,17 @@ public class HuvudProgram {
 
     public HuvudProgram() {
         FileManager fileManager = new FileManager(customerData, customerDataLog);
+        CustomerService customerService = new CustomerService(fileManager);
+        Customer customer = customerService.findCustomer("7703021234");
+
+        if(customer == null) {
+            System.out.println("Customer not found");
+        } else {
+            System.out.println("Customer found | Name: " + customer.getName() + " | " + "personalNumber: " + customer.getPersonalNumber());
+        }
+
+        customerService.checkMembership(customer);
+        customerService.registerTraining(customer);
     }
 
     public static void main(String[] args) {
