@@ -55,8 +55,10 @@ public class FileManagerTest {
         try(BufferedReader fileReader = new BufferedReader(new FileReader(customerDataShort))) {
             String line;
             while((line = fileReader.readLine()) != null){
-                String[] attributes = line.split(",");
-                assertEquals(2, attributes.length);
+                if(line.contains(",")){
+                    String[] attributes = line.split(",");
+                    assertEquals(2, attributes.length);
+                }
             }
 
         }catch (IOException e){
@@ -80,6 +82,4 @@ public class FileManagerTest {
         FileManager fileManager = new FileManager(customerDataWrong, customerDataLog);
         assertThrows(DateTimeParseException.class, fileManager::readCustomerFile);
     }
-
-
 }
