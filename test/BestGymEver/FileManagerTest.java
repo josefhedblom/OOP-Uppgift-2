@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,26 @@ public class FileManagerTest {
     private String customerData = "./test/TestData/testData.txt";
     private String customerDataLog = "./test/TestData/testDataLog.txt";
     private String customerDataShort = "./test/TestData/testDataShort.txt";
+    private String customerDataEmpty = "./test/TestData/testDataEmpty.txt";
+    private String customerDataWrong = "./test/TestData/testDataWrong.txt";
 
+
+    @Test
+    public void readFromCustomerFile(){
+        FileManager fileManager = new FileManager(customerData, customerDataLog);
+        List<Customer> customers = fileManager.readCustomerFile();
+        assertEquals(customers.size(), 3);
+        assertEquals(customers.get(0).getName(),"Alhambra Aromes");
+        assertEquals(customers.get(0).getPersonalNumber(),"7703021234");
+        assertEquals(customers.get(0).getLastPaymentDate(),LocalDate.parse("2024-07-01"));
+    }
+
+    @Test
+    public void readFromEmptyCustomerFile(){
+        FileManager fileManager = new FileManager(customerDataEmpty, customerDataLog);
+        List<Customer> customers = fileManager.readCustomerFile();
+        assertTrue(customers.isEmpty());
+    }
 
     @Test
     public void countLinesFromCustomerFile() {
@@ -30,13 +50,13 @@ public class FileManagerTest {
         assertEquals(lineCount, 6);
     }
 
-    @Test //FIXA
+    @Test
     public void splitLinesFromCustomerFile() {
         try(BufferedReader fileReader = new BufferedReader(new FileReader(customerDataShort))) {
             String line;
             while((line = fileReader.readLine()) != null){
-                String[] attributes = line.split(", ");
-                //assertEquals(attributes.length, 1);
+                String[] attributes = line.split(",");
+                assertEquals(2, attributes.length);
             }
 
         }catch (IOException e){
@@ -46,51 +66,20 @@ public class FileManagerTest {
 
     @Test
     public void createCustomerAttributesFromCustomerFile() {
-        try(BufferedReader fileReader = new BufferedReader(new FileReader(customerData))){
-            String line;
-            while((line = fileReader.readLine()) != null){
+        FileManager fileManager = new FileManager(customerData, customerDataLog);
+        List<Customer> customers = fileManager.readCustomerFile();
 
-                String[] attributes = line.split(", ");
-                String personalNumber = attributes[0];
-                String name = attributes[1];
-
-                String paymentDate = fileReader.readLine();
-                LocalDate lastPaymentDate = LocalDate.parse(paymentDate);
-
-                assertEquals(personalNumber, attributes[0]);
-                assertEquals(name, attributes[1]);
-                assertEquals(lastPaymentDate, LocalDate.parse(paymentDate));
-            }
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        assertEquals("7703021234", customers.get(0).getPersonalNumber());
+        assertEquals("Alhambra Aromes", customers.get(0).getName());
+        assertEquals(LocalDate.parse("2024-07-01"), customers.get(0).getLastPaymentDate());
     }
+
 
     @Test
-    public void createCustomerFromCustomerFileLog() {
-        try(BufferedReader fileReader = new BufferedReader(new FileReader(customerDataShort))){
-            String line;
-            while((line = fileReader.readLine()) != null){
-
-                String[] attributes = line.split(", ");
-                String personalNumber = attributes[0];
-                String name = attributes[1];
-
-                String paymentDate = fileReader.readLine();
-                LocalDate lastPaymentDate = LocalDate.parse(paymentDate);
-
-
-                Customer customer = new Customer(name, personalNumber, lastPaymentDate);
-
-                assertEquals(customer.getPersonalNumber(), attributes[0]);
-                assertEquals(customer.getLastPaymentDate(), LocalDate.parse(paymentDate));
-                assertEquals(customer.getName(), "Alhambra Aromes");
-            }
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+    public void handleInvalidDateFormat() {
+        FileManager fileManager = new FileManager(customerDataWrong, customerDataLog);
+        assertThrows(DateTimeParseException.class, fileManager::readCustomerFile);
     }
-  
+
+
 }
