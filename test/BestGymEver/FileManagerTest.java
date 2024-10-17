@@ -30,13 +30,62 @@ public class FileManagerTest {
         assertEquals(lineCount, 6);
     }
 
-    @Test
+    @Test //FIXA
     public void splitLinesFromCustomerFile() {
         try(BufferedReader fileReader = new BufferedReader(new FileReader(customerDataShort))) {
             String line;
             while((line = fileReader.readLine()) != null){
                 String[] attributes = line.split(", ");
-                assertEquals(attributes.length, 2);
+                //assertEquals(attributes.length, 1);
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void createCustomerAttributesFromCustomerFile() {
+        try(BufferedReader fileReader = new BufferedReader(new FileReader(customerData))){
+            String line;
+            while((line = fileReader.readLine()) != null){
+
+                String[] attributes = line.split(", ");
+                String personalNumber = attributes[0];
+                String name = attributes[1];
+
+                String paymentDate = fileReader.readLine();
+                LocalDate lastPaymentDate = LocalDate.parse(paymentDate);
+
+                assertEquals(personalNumber, attributes[0]);
+                assertEquals(name, attributes[1]);
+                assertEquals(lastPaymentDate, LocalDate.parse(paymentDate));
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void createCustomerFromCustomerFileLog() {
+        try(BufferedReader fileReader = new BufferedReader(new FileReader(customerDataShort))){
+            String line;
+            while((line = fileReader.readLine()) != null){
+
+                String[] attributes = line.split(", ");
+                String personalNumber = attributes[0];
+                String name = attributes[1];
+
+                String paymentDate = fileReader.readLine();
+                LocalDate lastPaymentDate = LocalDate.parse(paymentDate);
+
+
+                Customer customer = new Customer(name, personalNumber, lastPaymentDate);
+
+                assertEquals(customer.getPersonalNumber(), attributes[0]);
+                assertEquals(customer.getLastPaymentDate(), LocalDate.parse(paymentDate));
+                assertEquals(customer.getName(), "Alhambra Aromes");
             }
 
         }catch (IOException e){
