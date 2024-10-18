@@ -17,16 +17,21 @@ public class CustomerService {
         return null;
     }
 
-    public boolean checkMembership(Customer customer, LocalDate date) {
-        return customer.getLastPaymentDate().isAfter(date.minusDays(1)) ||
-                customer.getLastPaymentDate().isEqual(date.minusDays(1));
+    public String checkMembership(Customer customer, LocalDate date) {
+        if(customer.getLastPaymentDate().isAfter(date.minusYears(1)) || customer.getLastPaymentDate().isEqual(date.minusYears(1))) {
+            return MembershipStatus.CURRENT_MEMBER.getStatus();
+        } else if (customer.getLastPaymentDate().isBefore(date.minusYears(1))) {
+            return MembershipStatus.FORMER_MEMBER.getStatus();
+        } else {
+            return MembershipStatus.NON_MEMBER.getStatus();
+        }
     }
 
     public void registerTraining(Customer customer) {
         fileManager.customerWriteToTraningLog(customer);
     }
 
-    public void readRegisterTrainingLog(Customer customer) {
-        fileManager.customerWriteToTraningLog(customer);
+    public void readTrainingLog() {
+        fileManager.customerReadFromTraningLog();
     }
 }

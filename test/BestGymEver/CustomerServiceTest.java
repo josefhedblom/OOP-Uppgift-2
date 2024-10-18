@@ -31,13 +31,14 @@ class CustomerServiceTest {
         LocalDate testDate = LocalDate.parse("2024-01-01");
 
         Customer customerHasValidMembership = new Customer("Alhambra Aromes", "7703021234", LocalDate.parse("2024-07-01"));
-        assertTrue(customerService.checkMembership(customerHasValidMembership, testDate));
+        assertEquals(MembershipStatus.CURRENT_MEMBER.getStatus(), customerService.checkMembership(customerHasValidMembership, testDate));
 
         Customer customerHasExpiredMembership = new Customer("Bear Belle", "8204021234", LocalDate.parse("2019-12-02"));
-        assertFalse(customerService.checkMembership(customerHasExpiredMembership, testDate));
+        assertEquals(MembershipStatus.FORMER_MEMBER.getStatus(),customerService.checkMembership(customerHasExpiredMembership, testDate));
 
         Customer customerHasExactlyOneYearOldMembership = new Customer("Kalle Alfredsson", "871112123", LocalDate.parse("2025-01-01"));
-        assertTrue(customerService.checkMembership(customerHasExactlyOneYearOldMembership, testDate));
+        assertEquals(MembershipStatus.CURRENT_MEMBER.getStatus(),customerService.checkMembership(customerHasExactlyOneYearOldMembership, testDate));
+
     }
 
 }

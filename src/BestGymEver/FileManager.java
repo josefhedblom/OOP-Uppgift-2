@@ -2,6 +2,8 @@ package BestGymEver;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class FileManager {
         return customers;
     }
 
-    public void readCustomerTraningLogFile() {
+    public void customerReadFromTraningLog() {
         try(BufferedReader fileReader = new BufferedReader(new FileReader(this.fileLogPath))){
             String line;
             while((line = fileReader.readLine()) != null){
@@ -51,8 +53,9 @@ public class FileManager {
     }
 
     public void customerWriteToTraningLog(Customer customer) {
+        LocalDateTime time = LocalDateTime.now();
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(fileLogPath, true))){
-            String line = customer.getPersonalNumber() + ", " + customer.getName() + ", " + LocalDate.now();
+            String line = customer.getPersonalNumber() + ", " + customer.getName() + ", " + LocalDate.now() + ", " + time.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
             writer.write(line);
             writer.newLine();
         }catch (IOException e){
