@@ -39,9 +39,9 @@ public class FileManagerTest {
     public void readFromCustomerFile(){
         List<Customer> customers = fileManager.readCustomerFile();
         assertEquals(customers.size(), 14);
-        assertEquals(customers.get(0).getName(),"Alhambra Aromes");
-        assertEquals(customers.get(0).getPersonalNumber(),"7703021234");
-        assertEquals(customers.get(0).getLastPaymentDate(),LocalDate.parse("2024-07-01"));
+        assertEquals(customers.getFirst().getName(),"Alhambra Aromes");
+        assertEquals(customers.getFirst().getPersonalNumber(),"7703021234");
+        assertEquals(customers.getFirst().getLastPaymentDate(),LocalDate.parse("2024-07-01"));
     }
 
     @Test
