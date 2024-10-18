@@ -82,4 +82,18 @@ public class FileManagerTest {
         FileManager fileManager = new FileManager(customerDataWrong, customerDataLog);
         assertThrows(DateTimeParseException.class, fileManager::readCustomerFile);
     }
+
+    @Test
+    public void testCustomerWriteToTraningLog(){
+        FileManager fileManager = new FileManager(customerData, customerDataLog);
+        List<Customer> customers = fileManager.readCustomerFile();
+        fileManager.customerWriteToTraningLog(customers.get(0));
+    }
+
+    /*@Test
+    public void testCustomerReadFromTraningLog(){
+        FileManager fileManager = new FileManager("", customerDataLog);
+        fileManager.readCustomerTraningLogFile();
+        //assertEquals("7703021234, Alhambra Aromes, 2024-07-01", );
+    }*/
 }
