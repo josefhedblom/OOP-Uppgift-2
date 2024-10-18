@@ -1,16 +1,23 @@
 package BestGymEver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+
 public class FileManagerTest {
     private String customerData = "./test/TestData/testData.txt";
     private String customerDataLog = "./test/TestData/testDataLog.txt";
@@ -18,12 +25,20 @@ public class FileManagerTest {
     private String customerDataEmpty = "./test/TestData/testDataEmpty.txt";
     private String customerDataWrong = "./test/TestData/testDataWrong.txt";
 
+    private FileManager fileManager;
+    private Path tempFile;
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        tempFile = Files.createTempFile("training_log_test", ".txt");
+        fileManager = new FileManager(customerData, tempFile.toString());
+    }
+
 
     @Test
     public void readFromCustomerFile(){
-        FileManager fileManager = new FileManager(customerData, customerDataLog);
         List<Customer> customers = fileManager.readCustomerFile();
-        assertEquals(customers.size(), 3);
+        assertEquals(customers.size(), 14);
         assertEquals(customers.get(0).getName(),"Alhambra Aromes");
         assertEquals(customers.get(0).getPersonalNumber(),"7703021234");
         assertEquals(customers.get(0).getLastPaymentDate(),LocalDate.parse("2024-07-01"));
@@ -47,7 +62,7 @@ public class FileManagerTest {
         }catch (IOException e){
             e.printStackTrace();
         }
-        assertEquals(lineCount, 6);
+        assertEquals(lineCount, 28);
     }
 
     @Test
@@ -68,7 +83,6 @@ public class FileManagerTest {
 
     @Test
     public void createCustomerAttributesFromCustomerFile() {
-        FileManager fileManager = new FileManager(customerData, customerDataLog);
         List<Customer> customers = fileManager.readCustomerFile();
 
         assertEquals("7703021234", customers.get(0).getPersonalNumber());
@@ -84,16 +98,23 @@ public class FileManagerTest {
     }
 
     @Test
-    public void testCustomerWriteToTraningLog(){
-        FileManager fileManager = new FileManager(customerData, customerDataLog);
-        List<Customer> customers = fileManager.readCustomerFile();
-        fileManager.customerWriteToTraningLog(customers.get(0));
+    public void testCustomerWriteToTraningLog() throws IOException {
+        Customer customer = new Customer("Alhambra Aromes", "7703021234", LocalDate.parse("2024-07-01"));
+
+        LocalDate nowDate = LocalDate.now();
+        String expectedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String expectedLog = "7703021234, Alhambra Aromes, " + nowDate + ", " + expectedTime;
+
+        fileManager.customerWriteToTraningLog(customer);
+        List<String> lines = Files.readAllLines(tempFile);
+
+        assertEquals(1, lines.size());
+        assertEquals(expectedLog, lines.get(0));
     }
 
-    /*@Test
-    public void testCustomerReadFromTraningLog(){
-        FileManager fileManager = new FileManager("", customerDataLog);
-        fileManager.readCustomerTraningLogFile();
-        //assertEquals("7703021234, Alhambra Aromes, 2024-07-01", );
-    }*/
+    @AfterEach
+    public void tearDown() throws IOException {
+        Files.deleteIfExists(tempFile);
+    }
+
 }
